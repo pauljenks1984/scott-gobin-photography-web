@@ -1,16 +1,20 @@
-import React from 'react';
-import { GetStaticProps } from 'next';
-import Layout from '@/components/Layout';
-import MasonryGallery from '@/components/MasonryGallery';
-import SEOHead from '@/components/SEOHead';
-import { fetchImagesByFolder, CloudinaryImage } from '@/lib/cloudinary';
+import React from "react";
+import { GetStaticProps } from "next";
+import Layout from "@/components/Layout";
+import MasonryGallery from "@/components/MasonryGallery";
+import SEOHead from "@/components/SEOHead";
+import { fetchImagesByFolder, CloudinaryImage } from "@/lib/cloudinary";
 
-export const getStaticProps: GetStaticProps = async () => {
-  const images = await fetchImagesByFolder('photography/commercial');
+type Props = {
+  images: CloudinaryImage[];
+};
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const images = await fetchImagesByFolder("photography/commercial");
   return { props: { images }, revalidate: 60 };
 };
 
-export default function CategoryPage({ images }: { images: CloudinaryImage[] }) {
+export default function CommercialPage({ images }: Props) {
   return (
     <Layout>
       <SEOHead title="Commercial" description="Scott-Gobin Photography — Commercial portfolio" />

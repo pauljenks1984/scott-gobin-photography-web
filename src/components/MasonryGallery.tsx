@@ -14,13 +14,13 @@ export default function MasonryGallery({ images }: MasonryGalleryProps) {
   return (
     <div className="columns-1 sm:columns-2 md:columns-3 gap-4">
       {images.map((img) => (
-        <div key={img.public_id} className="mb-4 break-inside-avoid">
+        <div key={img.asset_id} className="mb-4">
           <Image
             src={img.secure_url}
             alt={img.public_id}
             width={img.width}
             height={img.height}
-            className="w-full h-auto rounded-lg shadow"
+            className="rounded-lg shadow-md w-full h-auto"
           />
         </div>
       ))}

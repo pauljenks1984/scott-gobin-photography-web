@@ -1,46 +1,42 @@
 // src/lib/cloudinary.ts
 
 export type CloudinaryImage = {
-  asset_id?: string;
+  asset_id: string;
   public_id: string;
+  format: string;
   secure_url: string;
   width: number;
   height: number;
-  format?: string;
-  created_at?: string;
-  tags?: string[];
-  context?: Record<string, string>;
-  bytes?: number;
-  folder?: string;
-  version?: number;
+  folder: string;
 };
 
-export async function fetchImagesByFolder(
-  folder: string = "photography"
-): Promise<CloudinaryImage[]> {
-  const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+export async function fetchImagesByFolder(folder: string = "photography/commercial") {
+  const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
+  const API_KEY = process.env.CLOUDINARY_API_KEY;
+  const API_SECRET = process.env.CLOUDINARY_API_SECRET;
 
-  if (!CLOUD_NAME) {
-    console.error("❌ Missing NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME");
+  if (!CLOUD_NAME || !API_KEY || !API_SECRET) {
+    console.error("❌ Missing Cloudinary environment variables");
     return [];
   }
 
   try {
-    const url = `https://res.cloudinary.com/${CLOUD_NAME}/image/list/${folder}.json`;
-    const res = await fetch(url);
+    const auth = Buffer.from(`${API_KEY}:${API_SECRET}`).toString("base64");
+    const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/resources/image/upload?prefix=${folder}/&max_results=100`;
+
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Basic ${auth}`,
+      },
+      cache: "no-store",
+    });
 
     if (!res.ok) {
-      console.error(`❌ Cloudinary request failed: ${res.status} ${res.statusText}`);
-      return [];
+      throw new Error(`❌ Cloudinary API error: ${res.status} - ${res.statusText}`);
     }
 
     const data = await res.json();
-
-    const resources: CloudinaryImage[] = (data.resources || []).sort(
-      (a: CloudinaryImage, b: CloudinaryImage) => (b.version || 0) - (a.version || 0)
-    );
-
-    return resources;
+    return data.resources as CloudinaryImage[];
   } catch (error) {
     console.error("❌ Cloudinary fetch error:", error);
     return [];
