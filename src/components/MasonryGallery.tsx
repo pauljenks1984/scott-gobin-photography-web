@@ -8,7 +8,7 @@ type MasonryGalleryProps = {
 
 export default function MasonryGallery({ images }: MasonryGalleryProps) {
   if (!images || images.length === 0) {
-    return <p className="text-gray-500 text-center">No images found.</p>;
+    return <p className="text-center text-gray-500">No images found.</p>;
   }
 
   return (
