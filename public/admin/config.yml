@@ -1,15 +1,14 @@
 backend:
-  name: github
-  repo: pauljenks1984/scott-gobin-photography-web
+  name: git-gateway
   branch: main
 
-media_folder: "public/uploads"       # where uploaded images will go
+media_folder: "public/uploads"
 public_folder: "/uploads"
 
 collections:
   - name: "gallery"
-    label: "Galleries"
-    folder: "content/galleries"
+    label: "Gallery"
+    folder: "content/gallery"
     create: true
     slug: "{{slug}}"
     fields:
