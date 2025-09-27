@@ -1,5 +1,6 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: pauljenks1984/scott-gobin-photography-web
   branch: main
 
 media_folder: "public/uploads"
@@ -15,3 +16,4 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Description", name: "description", widget: "text" }
       - { label: "Image", name: "image", widget: "image" }
+
