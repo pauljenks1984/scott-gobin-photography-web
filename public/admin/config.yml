@@ -1,18 +1,21 @@
 backend:
   name: github
-  repo: pauljenks1984/scott-gobin-photography-web
+  repo: YOUR_GITHUB_USERNAME/YOUR_REPO_NAME
   branch: main
 
-media_folder: "public/uploads"
-public_folder: "/uploads"
+# If you're using OAuth (recommended)
+publish_mode: editorial_workflow
+
+media_folder: "static/images/uploads"
+public_folder: "/images/uploads"
 
 collections:
-  - name: "gallery"
-    label: "Gallery"
-    folder: "content/gallery"
+  - name: "blog"
+    label: "Blog"
+    folder: "content/blog"
     create: true
     slug: "{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
-      - { label: "Description", name: "description", widget: "text" }
-      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Body", name: "body", widget: "markdown" }
