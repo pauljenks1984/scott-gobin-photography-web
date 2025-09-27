@@ -1,47 +1,29 @@
-import React, { useEffect, useState } from "react";
-import Masonry from "react-masonry-css";
+import React from "react";
+import Image from "next/image";
+import { CloudinaryImage } from "@/lib/cloudinary";
 
-type CloudinaryImage = {
-  id: string;
-  public_id: string;
-  secure_url: string;
-  width: number;
-  height: number;
+type MasonryGalleryProps = {
+  images: CloudinaryImage[];
 };
 
-export default function Gallery() {
-  const [images, setImages] = useState<CloudinaryImage[]>([]);
-
-  useEffect(() => {
-    async function loadImages() {
-      const res = await fetch("/api/images?folder=photography/commercial");
-      const data = await res.json();
-      setImages(data);
-    }
-    loadImages();
-  }, []);
-
-  const breakpoints = { default: 3, 1100: 2, 700: 1 };
+export default function MasonryGallery({ images }: MasonryGalleryProps) {
+  if (!images || images.length === 0) {
+    return <p className="text-gray-500 text-center">No images found.</p>;
+  }
 
   return (
-    <Masonry
-      breakpointCols={breakpoints}
-      className="my-masonry-grid"
-      columnClassName="my-masonry-grid_column"
-    >
+    <div className="columns-1 sm:columns-2 md:columns-3 gap-4">
       {images.map((img) => (
-        <img
-          key={img.id}
-          src={img.secure_url}
-          alt={img.public_id}
-          style={{
-            width: "100%",
-            display: "block",
-            borderRadius: "12px",
-            marginBottom: "1rem",
-          }}
-        />
+        <div key={img.public_id} className="mb-4 break-inside-avoid">
+          <Image
+            src={img.secure_url}
+            alt={img.public_id}
+            width={img.width}
+            height={img.height}
+            className="w-full h-auto rounded-lg shadow"
+          />
+        </div>
       ))}
-    </Masonry>
+    </div>
   );
 }
