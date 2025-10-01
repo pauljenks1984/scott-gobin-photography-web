@@ -1,37 +1,38 @@
+// src/pages/api/images.ts
 import type { NextApiRequest, NextApiResponse } from "next";
+import { fetchImagesByFolder } from "@/lib/cloudinary";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
+    const folders = [
+      "photography/commercial",
+      "photography/weddings",
+      "photography/fashion",
+      "photography/portraits",
+    ];
 
-    if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
-      return res.status(500).json({ error: "Missing Cloudinary credentials" });
-    }
+    // Fetch from all folders
+    const allImages = await Promise.all(folders.map(folder => fetchImagesByFolder(folder)));
+    const merged = allImages.flat();
 
-    const auth = Buffer.from(`${CLOUDINARY_API_KEY}:${CLOUDINARY_API_SECRET}`).toString("base64");
+    // Separate featured vs others
+    const featured = merged.filter(img => img.tags?.includes("featured"));
+    const others = merged.filter(img => !img.tags?.includes("featured"));
 
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/resources/image/upload?max_results=50`,
-      {
-        headers: { Authorization: `Basic ${auth}` },
-      }
+    // Sort featured by newest first
+    const sortedFeatured = featured.sort((a, b) => 
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
 
-    const data = await response.json();
+    // Shuffle others
+    const shuffledOthers = others.sort(() => Math.random() - 0.5);
 
-    // ✅ Clean up the response for frontend use
-    const images = (data.resources || []).map((img: any) => ({
-      id: img.asset_id,
-      public_id: img.public_id,
-      secure_url: img.secure_url,
-      width: img.width,
-      height: img.height,
-      folder: img.asset_folder,
-    }));
+    // Combine
+    const final = [...sortedFeatured, ...shuffledOthers];
 
-    return res.status(200).json(images);
-  } catch (error) {
-    console.error("❌ Cloudinary API error:", error);
-    return res.status(500).json({ error: "Failed to fetch images" });
+    res.status(200).json(final);
+  } catch (err) {
+    console.error("❌ Error fetching all images:", err);
+    res.status(500).json({ error: "Failed to load images" });
   }
 }

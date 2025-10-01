@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
-import MasonryGallery from "@/components/MasonryGallery";
 import SEOHead from "@/components/SEOHead";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
@@ -12,69 +11,92 @@ type CloudinaryImage = {
   width: number;
   height: number;
   folder?: string;
+  tags?: string[];
 };
 
 export default function Home() {
   const [images, setImages] = useState<CloudinaryImage[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 🔎 Lightbox state
+  // Lightbox state
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-useEffect(() => {
-  async function loadImages() {
-    try {
-      const res = await fetch("/api/images");
-      const data = await res.json();
-      console.log("📸 Loaded images:", data); // Debugging
-
-      // ✅ Sort newest first (by version number)
-      const sorted = data.sort((a: any, b: any) => b.version - a.version);
-
-      setImages(sorted);
-    } catch (err) {
-      console.error("❌ Error loading images:", err);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    async function loadImages() {
+      try {
+        const res = await fetch("/api/images");
+        const data = await res.json();
+        setImages(data);
+      } catch (err) {
+        console.error("❌ Error loading images:", err);
+      } finally {
+        setLoading(false);
+      }
     }
-  }
-  loadImages();
-}, []);
+    loadImages();
+  }, []);
 
+  // Split featured and normal
+  const featured = images.filter((img) => img.tags?.includes("featured"));
+  const normal = images.filter((img) => !img.tags?.includes("featured"));
 
-  // 🔎 Convert fetched images to slides for lightbox
-  const slides = images.map((img) => ({ src: img.secure_url }));
+  // Merge for lightbox indexing
+  const allImages = [...featured, ...normal];
+  const slides = allImages.map((img) => ({ src: img.secure_url }));
 
   return (
     <Layout>
       <SEOHead title="Home" description="Scott-Gobin Photography — Featured work" />
       <div className="max-w-6xl mx-auto px-4">
-        <h1 className="text-3xl font-semibold my-8">Featured Work</h1>
+        <h1 className="sr-only">Featured Work</h1>
 
         {loading ? (
           <p className="text-center text-gray-500">Loading gallery...</p>
-        ) : images.length > 0 ? (
-          <div className="columns-2 md:columns-3 gap-4 space-y-4">
-            {images.map((img, index) => (
-              <img
-                key={img.id}
-                src={img.secure_url}
-                alt={img.public_id}
-                className="w-full cursor-pointer rounded-lg shadow-sm hover:opacity-80 transition"
-                onClick={() => {
-                  setCurrentIndex(index);
-                  setLightboxOpen(true);
-                }}
-              />
-            ))}
-          </div>
         ) : (
-          <p className="text-center text-gray-400">No images found.</p>
+          <>
+            {/* Featured Section */}
+            {featured.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold mb-4">Featured</h2>
+                <div className="columns-2 md:columns-3 gap-4 space-y-4">
+                  {featured.map((img, index) => (
+                    <img
+                      key={img.id}
+                      src={img.secure_url}
+                      alt={img.public_id}
+                      className="w-full cursor-pointer rounded shadow-md hover:opacity-80 transition"
+                      onClick={() => {
+                        setCurrentIndex(index); // index based on allImages
+                        setLightboxOpen(true);
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Normal Masonry Section */}
+            <div className="columns-2 md:columns-3 gap-4 space-y-4">
+              {normal.map((img, index) => (
+                <img
+                  key={img.id}
+                  src={img.secure_url}
+                  alt={img.public_id}
+                  className="w-full cursor-pointer shadow-sm hover:opacity-80 transition"
+                  onClick={() => {
+                    // offset index by featured count
+                    setCurrentIndex(index + featured.length);
+                    setLightboxOpen(true);
+                  }}
+                />
+              ))}
+            </div>
+          </>
         )}
       </div>
 
-      {/* ✅ Lightbox Component */}
+      {/* Lightbox */}
       <Lightbox
         open={lightboxOpen}
         close={() => setLightboxOpen(false)}

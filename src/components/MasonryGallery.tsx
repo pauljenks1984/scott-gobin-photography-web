@@ -25,7 +25,7 @@ export default function MasonryGallery({ images }: MasonryGalleryProps) {
           key={img.public_id}
           src={img.secure_url}
           alt={img.public_id}
-          className="w-full mb-4 rounded-lg shadow-sm hover:opacity-90 transition"
+          className="w-full mb-4 shadow-sm hover:opacity-90 transition"
           loading="lazy"
         />
       ))}

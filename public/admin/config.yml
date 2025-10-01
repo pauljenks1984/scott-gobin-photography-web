@@ -1,28 +1,30 @@
-local_backend: true   # 👈 important for local dev
-
 backend:
   name: github
   repo: pauljenks1984/scott-gobin-photography-web
   branch: main
   auth_endpoint: https://api.netlify.com/auth
 
-media_folder: "public/uploads"     # Where uploaded images are stored in your repo
-public_folder: "/uploads"          # Path your site uses to access them
+local_backend: true
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
 
 collections:
   - name: "pages"
     label: "Pages"
-    files:
-      - file: "content/about.md"
-        label: "About"
-        name: "about"
-        fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Body", name: "body", widget: "markdown" }
+    folder: "content/pages"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Body", name: "body", widget: "markdown" }
 
-      - file: "content/contact.md"
-        label: "Contact"
-        name: "contact"
-        fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Body", name: "body", widget: "markdown" }
+  - name: "gallery"
+    label: "Gallery"
+    folder: "content/gallery"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Image", name: "image", widget: "image" }

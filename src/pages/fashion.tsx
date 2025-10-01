@@ -6,8 +6,11 @@ import SEOHead from '@/components/SEOHead';
 import { fetchImagesByFolder, CloudinaryImage } from '@/lib/cloudinary';
 
 export const getStaticProps: GetStaticProps = async () => {
-  const images = await fetchImagesByFolder('photography/fashion');
-  return { props: { images }, revalidate: 60 };
+  const images = await fetchImagesByFolder("photography/fashion");
+  return {
+    props: { images },
+    revalidate: 60,
+  };
 };
 
 export default function CategoryPage({ images }: { images: CloudinaryImage[] }) {

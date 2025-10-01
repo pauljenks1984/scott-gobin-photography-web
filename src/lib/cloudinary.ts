@@ -1,16 +1,5 @@
 // src/lib/cloudinary.ts
-
-export type CloudinaryImage = {
-  asset_id: string;
-  public_id: string;
-  format: string;
-  secure_url: string;
-  width: number;
-  height: number;
-  folder: string;
-};
-
-export async function fetchImagesByFolder(folder: string = "photography/commercial") {
+export async function fetchImagesByFolder(folder: string) {
   const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
   const API_KEY = process.env.CLOUDINARY_API_KEY;
   const API_SECRET = process.env.CLOUDINARY_API_SECRET;
@@ -22,13 +11,22 @@ export async function fetchImagesByFolder(folder: string = "photography/commerci
 
   try {
     const auth = Buffer.from(`${API_KEY}:${API_SECRET}`).toString("base64");
-    const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/resources/image/upload?prefix=${folder}/&max_results=100`;
+
+    const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/resources/search`;
+
+    const body = {
+      expression: `folder:${folder}/*`,
+      max_results: 100,
+      with_field: ["context", "metadata", "tags"], // 👈 force context & metadata in response
+    };
 
     const res = await fetch(url, {
+      method: "POST",
       headers: {
         Authorization: `Basic ${auth}`,
+        "Content-Type": "application/json",
       },
-      cache: "no-store",
+      body: JSON.stringify(body),
     });
 
     if (!res.ok) {
@@ -36,7 +34,14 @@ export async function fetchImagesByFolder(folder: string = "photography/commerci
     }
 
     const data = await res.json();
-    return data.resources as CloudinaryImage[];
+
+    // 🔎 For debugging: log the first resource’s context/metadata
+    if (data.resources.length > 0) {
+      console.log("📝 Example context:", data.resources[0].context);
+      console.log("📝 Example metadata:", data.resources[0].metadata);
+    }
+
+    return data.resources;
   } catch (error) {
     console.error("❌ Cloudinary fetch error:", error);
     return [];

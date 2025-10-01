@@ -7,7 +7,7 @@ The majority of my work is commercial, working with marketing teams to promote p
 
 ## Work
 
-I’m fortunate to have built good relationships with clients in Liverpool, including:
+I've built good relationships with clients in Liverpool, including:
 
 LJMU - Liverpool John Moores University
 Hatfields Jaguar, Liverpool
