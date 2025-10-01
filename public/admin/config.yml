@@ -1,3 +1,5 @@
+local_backend: true   # 👈 important for local dev
+
 backend:
   name: github
   repo: pauljenks1984/scott-gobin-photography-web
