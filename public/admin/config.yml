@@ -1,21 +1,24 @@
 backend:
-  name: pauljenks1984
-  repo: scott-gobin-photography-web
+  name: git-gateway
   branch: main
 
-# If you're using OAuth (recommended)
-publish_mode: editorial_workflow
-
-media_folder: "static/images/uploads"
-public_folder: "/images/uploads"
+media_folder: "public/uploads"     # Where uploaded images are stored in your repo
+public_folder: "/uploads"          # Path your site uses to access them
 
 collections:
-  - name: "blog"
-    label: "Blog"
-    folder: "content/blog"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Date", name: "date", widget: "datetime" }
-      - { label: "Body", name: "body", widget: "markdown" }
+  - name: "pages"
+    label: "Pages"
+    files:
+      - file: "content/about.md"
+        label: "About"
+        name: "about"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Body", name: "body", widget: "markdown" }
+
+      - file: "content/contact.md"
+        label: "Contact"
+        name: "contact"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Body", name: "body", widget: "markdown" }
