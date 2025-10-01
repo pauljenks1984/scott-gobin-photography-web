@@ -2,6 +2,7 @@ backend:
   name: github
   repo: pauljenks1984/scott-gobin-photography-web
   branch: main
+  auth_endpoint: https://api.netlify.com/auth
 
 media_folder: "public/uploads"     # Where uploaded images are stored in your repo
 public_folder: "/uploads"          # Path your site uses to access them
