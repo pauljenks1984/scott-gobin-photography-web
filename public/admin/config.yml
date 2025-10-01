@@ -1,5 +1,6 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: pauljenks1984/scott-gobin-photography-web
   branch: main
 
 media_folder: "public/uploads"     # Where uploaded images are stored in your repo
