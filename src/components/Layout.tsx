@@ -15,18 +15,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { href: "/about", label: "About" },
   ];
 
-  // Show button after scrolling down
   useEffect(() => {
-    const handleScroll = () => {
-      setShowButton(window.scrollY > 300);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setShowButton(window.scrollY > 300);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -41,19 +36,30 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex space-x-6">
-            {navItems.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`transition ${
-                  router.pathname === href
-                    ? "text-black font-semibold border-b-2 border-black"
-                    : "text-gray-600 hover:text-black"
-                }`}
-              >
-                {label}
-              </Link>
-            ))}
+            {navItems.map(({ href, label }) => {
+              const active = router.pathname === href;
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`transition ${
+                    active
+                      ? // Desktop: border underline
+                        "text-black font-semibold md:border-b-2 md:border-black md:pb-[2px]"
+                      : "text-gray-600 hover:text-black"
+                  }`}
+                >
+                  {/* Mobile: text underline only (fits text width) */}
+                  <span
+                    className={`md:no-underline ${
+                      active ? "underline decoration-2 decoration-black underline-offset-4" : ""
+                    }`}
+                  >
+                    {label}
+                  </span>
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Mobile Burger */}
@@ -62,24 +68,28 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </button>
         </div>
 
-        {/* Mobile Menu (stacked, not overlay) */}
+        {/* Mobile Menu (stacked) */}
         {menuOpen && (
           <nav className="md:hidden border-t bg-white">
             <div className="max-w-6xl mx-auto px-4 py-2 flex flex-col space-y-2">
-              {navItems.map(({ href, label }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setMenuOpen(false)}
-                  className={`transition ${
-                    router.pathname === href
-                      ? "text-black font-semibold border-b-2 border-black"
-                      : "text-gray-600 hover:text-black"
-                  }`}
-                >
-                  {label}
-                </Link>
-              ))}
+              {navItems.map(({ href, label }) => {
+                const active = router.pathname === href;
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setMenuOpen(false)}
+                    className={`transition w-fit ${
+                      active ? "text-black font-semibold" : "text-gray-600 hover:text-black"
+                    }`}
+                  >
+                    {/* Mobile: text underline */}
+                    <span className={active ? "underline decoration-2 decoration-black underline-offset-4" : ""}>
+                      {label}
+                    </span>
+                  </Link>
+                );
+              })}
             </div>
           </nav>
         )}
@@ -88,11 +98,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* Main content */}
       <main className="flex-grow">{children}</main>
 
-      {/* Back to Top Button */}
+      {/* Back to Top */}
       {showButton && (
         <button
           onClick={scrollToTop}
           className="fixed bottom-6 right-6 p-3 rounded-full bg-black text-white shadow-md hover:bg-gray-800 transition"
+          aria-label="Back to top"
         >
           <ChevronUp className="h-5 w-5" />
         </button>
