@@ -2,7 +2,18 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { fetchImagesByFolder } from "@/lib/cloudinary";
 
+// 🔹 In-memory cache
+let cache: any[] | null = null;
+let lastFetch = 0;
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const now = Date.now();
+
+  // If cache exists and is fresh (< 60s old), return it
+  if (cache && now - lastFetch < 60000) {
+    return res.status(200).json(cache);
+  }
+
   try {
     const folders = [
       "photography/commercial",
@@ -20,8 +31,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const others = merged.filter(img => !img.tags?.includes("featured"));
 
     // Sort featured by newest first
-    const sortedFeatured = featured.sort((a, b) => 
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    const sortedFeatured = featured.sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
 
     // Shuffle others
@@ -29,6 +40,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Combine
     const final = [...sortedFeatured, ...shuffledOthers];
+
+    // Store in cache
+    cache = final;
+    lastFetch = now;
 
     res.status(200).json(final);
   } catch (err) {

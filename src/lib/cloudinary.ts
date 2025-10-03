@@ -16,7 +16,7 @@ export async function fetchImagesByFolder(folder: string) {
 
     const body = {
       expression: `folder:${folder}/*`,
-      max_results: 100,
+      max_results: 30,
       with_field: ["context", "metadata", "tags"], // 👈 force context & metadata in response
     };
 

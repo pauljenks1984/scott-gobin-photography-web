@@ -1,5 +1,5 @@
 ---
-title: About JSG Photography
+title: About Scott-Gobin Photography
 ---
 **I’m a freelance photographer based in Liverpool, UK**
 
@@ -13,5 +13,7 @@ LJMU - Liverpool John Moores University
 Hatfields Jaguar, Liverpool
 David M Robinson - Official Rolex Retailer
 Knowsley College
-Drone photography
-I have an A2 CofC qualification to fly for commercial photography
+
+## Drone photography
+
+I have an A2 CofC qualification to fly for commercial photography.

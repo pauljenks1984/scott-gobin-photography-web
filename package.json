@@ -10,9 +10,11 @@
     "cms": "concurrently \"npx decap-server\" \"npm run dev\""
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.9",
     "axios": "^1.4.0",
     "cloudinary": "^2.7.0",
     "gray-matter": "^4.0.3",
+    "lucide-react": "^0.544.0",
     "marked": "^16.3.0",
     "next": "^15.5.4",
     "react": "^19.1.1",

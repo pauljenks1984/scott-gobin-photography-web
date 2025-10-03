@@ -55,7 +55,7 @@ export default function Home() {
           <p className="text-center text-gray-500">Loading gallery...</p>
         ) : (
           <>
-            {/* Featured Section */}
+            {/* Featured Section 
             {featured.length > 0 && (
               <div className="mb-8">
                 <h2 className="text-xl font-semibold mb-4">Featured</h2>
@@ -66,6 +66,7 @@ export default function Home() {
                       src={img.secure_url}
                       alt={img.public_id}
                       className="w-full cursor-pointer rounded shadow-md hover:opacity-80 transition"
+                      loading="lazy"
                       onClick={() => {
                         setCurrentIndex(index); // index based on allImages
                         setLightboxOpen(true);
@@ -74,7 +75,7 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-            )}
+            )}*/}
 
             {/* Normal Masonry Section */}
             <div className="columns-2 md:columns-3 gap-4 space-y-4">
@@ -84,6 +85,7 @@ export default function Home() {
                   src={img.secure_url}
                   alt={img.public_id}
                   className="w-full cursor-pointer shadow-sm hover:opacity-80 transition"
+                  loading="lazy"
                   onClick={() => {
                     // offset index by featured count
                     setCurrentIndex(index + featured.length);

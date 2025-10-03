@@ -15,9 +15,11 @@ export default function AboutPage({ frontmatter, contentHtml }: Props) {
   return (
     <Layout>
       <SEOHead title={frontmatter.title} description={frontmatter.description} />
-      <div className="max-w-3xl mx-auto prose prose-lg">
-        <h1>{frontmatter.title}</h1>
-        <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+      <div className="max-w-6xl mx-auto px-4">
+        <article className="prose prose-lg">
+          <h1 className="text-3xl font-semibold my-8">{frontmatter.title}</h1>
+          <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+        </article>
       </div>
     </Layout>
   );
