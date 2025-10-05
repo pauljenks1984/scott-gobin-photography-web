@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import Lightbox from "yet-another-react-lightbox";
+import ProgressiveImage from "@/components/ProgressiveImage";
 import "yet-another-react-lightbox/styles.css";
 
 type CloudinaryImage = {
@@ -11,6 +12,7 @@ type CloudinaryImage = {
   width: number;
   height: number;
   folder?: string;
+  metadata?: Record<string, string>;
 };
 
 export default function Commercial() {
@@ -28,8 +30,24 @@ export default function Commercial() {
         if (!res.ok) throw new Error("Failed to fetch");
         const data = await res.json();
 
-        const sorted = data.sort((a: any, b: any) => b.version - a.version);
-        setImages(sorted);
+        if (!data || !Array.isArray(data.images)) {
+          throw new Error("Invalid response format");
+        }
+
+        const featured = data.images.filter(
+          (img: CloudinaryImage) => img.metadata?.featured === "true"
+        );
+        const others = data.images.filter(
+          (img: CloudinaryImage) => img.metadata?.featured !== "true"
+        );
+        const sorted = [...featured, ...others];
+
+        const unique = sorted.filter(
+          (img, index, self) =>
+            index === self.findIndex((i) => i.public_id === img.public_id)
+        );
+
+        setImages(unique);
       } catch (err) {
         console.error("❌ Error loading images:", err);
         setError(true);
@@ -48,7 +66,7 @@ export default function Commercial() {
         title="Commercial"
         description="Scott-Gobin Photography — Commercial portfolio"
       />
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-8xl mx-auto px-4">
         <h1 className="visually-hidden text-3xl font-semibold my-8">Commercial</h1>
 
         {loading ? (
@@ -56,11 +74,10 @@ export default function Commercial() {
         ) : error ? (
           <div className="text-center py-20">
             <p className="text-gray-600 mb-4">
-              ⚠️ Commercial gallery is unavailable right now. Please try again
-              later.
+              ⚠️ Commercial gallery is unavailable right now. Please try again later.
             </p>
             <img
-              src="/fallback.jpg" // put a fallback image in /public
+              src="/fallback.jpg"
               alt="Fallback gallery"
               className="mx-auto max-w-sm opacity-70"
             />
@@ -68,12 +85,9 @@ export default function Commercial() {
         ) : images.length > 0 ? (
           <div className="columns-2 md:columns-3 gap-4 space-y-4">
             {images.map((img, index) => (
-              <img
-                key={img.id}
-                src={img.secure_url}
-                alt={img.public_id}
-                className="w-full cursor-pointer shadow-sm hover:opacity-80 transition"
-                loading="lazy"
+              <ProgressiveImage
+                key={img.id || img.public_id || `${index}-${img.secure_url}`}
+                img={img}
                 onClick={() => {
                   setCurrentIndex(index);
                   setLightboxOpen(true);

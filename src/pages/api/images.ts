@@ -2,52 +2,43 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { fetchImagesByFolder } from "@/lib/cloudinary";
 
-// 🔹 In-memory cache
-let cache: any[] | null = null;
-let lastFetch = 0;
+// 🔹 Helper: check if image is featured
+function isFeatured(img: any): boolean {
+  const metaVal = img?.metadata?.featured;
+  const fromMeta =
+    typeof metaVal === "string"
+      ? metaVal.toLowerCase() === "true" || metaVal === "1" || metaVal === "yes"
+      : !!metaVal;
+  const fromTags = Array.isArray(img?.tags) && img.tags.includes("featured");
+  return fromMeta || fromTags;
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const now = Date.now();
-
-  // If cache exists and is fresh (< 60s old), return it
-  if (cache && now - lastFetch < 60000) {
-    return res.status(200).json(cache);
-  }
-
   try {
-    const folders = [
-      "photography/commercial",
-      "photography/weddings",
-      "photography/fashion",
-      "photography/portraits",
-    ];
+    const folder = (req.query.folder as string) || "photography";
+    const cursor = (req.query.cursor as string) || undefined;
 
-    // Fetch from all folders
-    const allImages = await Promise.all(folders.map(folder => fetchImagesByFolder(folder)));
-    const merged = allImages.flat();
+    const { resources, next_cursor } = await fetchImagesByFolder(folder, cursor);
 
-    // Separate featured vs others
-    const featured = merged.filter(img => img.tags?.includes("featured"));
-    const others = merged.filter(img => !img.tags?.includes("featured"));
+    // 🔹 Force featured images first
+    const featured = resources.filter(isFeatured);
+    const others = resources.filter((r: any) => !isFeatured(r));
 
-    // Sort featured by newest first
-    const sortedFeatured = featured.sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    // Sort featured newest → oldest
+    featured.sort(
+      (a: any, b: any) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
 
-    // Shuffle others
-    const shuffledOthers = others.sort(() => Math.random() - 0.5);
-
     // Combine
-    const final = [...sortedFeatured, ...shuffledOthers];
+    const images = [...featured, ...others];
 
-    // Store in cache
-    cache = final;
-    lastFetch = now;
-
-    res.status(200).json(final);
+    res.status(200).json({
+      images,
+      next_cursor: next_cursor || null,
+    });
   } catch (err) {
-    console.error("❌ Error fetching all images:", err);
+    console.error("❌ Error fetching images:", err);
     res.status(500).json({ error: "Failed to load images" });
   }
 }

@@ -48,4 +48,21 @@ p {
   border: 0;
 }
 
+/* Masonry layout */
+.masonry-grid {
+  display: flex;
+  margin-left: -1rem; /* gutter compensation */
+  width: auto;
+}
+
+.masonry-grid_column {
+  padding-left: 1rem; /* gutter */
+  background-clip: padding-box;
+}
+
+/* vertical gutter */
+.masonry-grid_column > .masonry-item {
+  margin-bottom: 1rem;
+}
+
 
