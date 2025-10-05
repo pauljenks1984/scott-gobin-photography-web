@@ -2,43 +2,48 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { fetchImagesByFolder } from "@/lib/cloudinary";
 
-// 🔹 Helper: check if image is featured
-function isFeatured(img: any): boolean {
-  const metaVal = img?.metadata?.featured;
-  const fromMeta =
-    typeof metaVal === "string"
-      ? metaVal.toLowerCase() === "true" || metaVal === "1" || metaVal === "yes"
-      : !!metaVal;
-  const fromTags = Array.isArray(img?.tags) && img.tags.includes("featured");
-  return fromMeta || fromTags;
-}
+type CacheEntry = {
+  timestamp: number;
+  data: { images: any[]; next_cursor?: string | null };
+};
+
+const CACHE: Record<string, CacheEntry> = {};
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    const folder = (req.query.folder as string) || "photography";
-    const cursor = (req.query.cursor as string) || undefined;
+  const folder = (req.query.folder as string) || "photography";
+  const cursor = req.query.cursor as string | undefined;
+  const cacheKey = `${folder}-${cursor || "first"}`;
 
+  const now = Date.now();
+
+  // ✅ Use cache if it’s still fresh
+  if (CACHE[cacheKey] && now - CACHE[cacheKey].timestamp < CACHE_TTL) {
+    return res.status(200).json(CACHE[cacheKey].data);
+  }
+
+  try {
     const { resources, next_cursor } = await fetchImagesByFolder(folder, cursor);
 
-    // 🔹 Force featured images first
-    const featured = resources.filter(isFeatured);
-    const others = resources.filter((r: any) => !isFeatured(r));
+    // ✅ Featured always first
+    const featured = resources.filter((img: any) => img.metadata?.featured === "true");
+    const others = resources.filter((img: any) => img.metadata?.featured !== "true");
+    const sorted = [...featured, ...others];
 
-    // Sort featured newest → oldest
-    featured.sort(
-      (a: any, b: any) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
+    const data = { images: sorted, next_cursor: next_cursor || null };
 
-    // Combine
-    const images = [...featured, ...others];
+    // ✅ Save to cache
+    CACHE[cacheKey] = { timestamp: now, data };
 
-    res.status(200).json({
-      images,
-      next_cursor: next_cursor || null,
-    });
+    return res.status(200).json(data);
   } catch (err) {
-    console.error("❌ Error fetching images:", err);
-    res.status(500).json({ error: "Failed to load images" });
+    console.error("❌ Error fetching images for folder:", folder, err);
+
+    // ✅ Serve stale cache if we have one
+    if (CACHE[cacheKey]) {
+      return res.status(200).json(CACHE[cacheKey].data);
+    }
+
+    return res.status(500).json({ error: "Failed to load images" });
   }
 }
