@@ -18,7 +18,7 @@ type CacheEntry = {
 export const CACHE: Record<string, CacheEntry> = {};
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
-// ✅ Consider multiple places a “featured” flag might live
+// ✅ Check multiple possible places for featured flag
 function isFeatured(r: Resource): boolean {
   const metaVal =
     r?.metadata?.featured ??
@@ -37,6 +37,11 @@ function isFeatured(r: Resource): boolean {
   return Boolean(metaYes || tagYes);
 }
 
+// ✅ Shuffle helper
+function shuffle<T>(arr: T[]): T[] {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const folder = (req.query.folder as string) || "photography";
   const cursor = (req.query.cursor as string) || undefined;
@@ -52,17 +57,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { resources, next_cursor } = await fetchImagesByFolder(folder, cursor);
     const list: Resource[] = Array.isArray(resources) ? resources : [];
 
-    // Put featured first (and keep newest featured first if created_at present)
+    // Split featured vs others
     const featured = list.filter(isFeatured);
     const others = list.filter((r) => !isFeatured(r));
+
+    // Sort featured newest first
     featured.sort(
       (a, b) => +new Date(b.created_at || 0) - +new Date(a.created_at || 0)
     );
 
-    const final = [...featured, ...others];
+    let final: Resource[];
+    if (featured.length > 0) {
+      // ✅ Featured first, others randomized
+      final = [...featured, ...shuffle(others)];
+    } else {
+      // ✅ No featured → shuffle everything
+      final = shuffle(list);
+    }
+
     const data = { images: final, next_cursor: next_cursor || null };
 
-    // Cache the *sorted* result
+    // Cache sorted result
     CACHE[cacheKey] = { timestamp: now, data };
 
     return res.status(200).json(data);
@@ -76,8 +91,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ error: "Failed to load images" });
   }
 }
+
+// Helper to clear cache manually
 export function clearCache() {
   Object.keys(CACHE).forEach((key) => delete CACHE[key]);
   console.log("✅ Cache cleared");
 }
-
