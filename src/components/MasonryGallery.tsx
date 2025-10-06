@@ -1,34 +1,27 @@
-import React from "react";
+// src/components/MasonryGallery.tsx
+import Masonry from "react-masonry-css";
+import ImageCard from "./ImageCard";
 
-export type CloudinaryImage = {
+type ImageResource = {
   public_id: string;
   secure_url: string;
-  format?: string;
-  width?: number;
-  height?: number;
-  [key: string]: any;
+  metadata?: Record<string, any>;
 };
 
-type MasonryGalleryProps = {
-  images: CloudinaryImage[];
-};
-
-export default function MasonryGallery({ images }: MasonryGalleryProps) {
-  if (!images || images.length === 0) {
-    return <p className="text-center text-gray-500">No images found.</p>;
-  }
-
+export default function MasonryGallery({ images }: { images: ImageResource[] }) {
   return (
-    <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+    <Masonry
+      breakpointCols={{
+        default: 3,   // desktop (>= 1024px)
+        1024: 2,      // tablet
+        640: 1        // mobile
+      }}
+      className="flex w-full gap-4"
+      columnClassName="flex flex-col gap-4"
+    >
       {images.map((img) => (
-        <img
-          key={img.public_id}
-          src={img.secure_url}
-          alt={img.public_id}
-          className="w-full mb-4 shadow-sm hover:opacity-90 transition"
-          loading="lazy"
-        />
+        <ImageCard key={img.public_id} image={img} />
       ))}
-    </div>
+    </Masonry>
   );
 }

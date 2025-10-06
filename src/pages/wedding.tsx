@@ -84,8 +84,9 @@ export default function Wedding() {
 
   // ✅ Masonry breakpoints
   const breakpointColumnsObj = {
-    default: 3,
-    768: 2,
+        default: 3,   // desktop (>= 1024px)
+        1024: 2,      // tablet
+        640: 1        // mobile
   };
 
   return (
