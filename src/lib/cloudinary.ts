@@ -12,7 +12,7 @@ export async function fetchImagesByFolder(folder: string, nextCursor?: string) {
 
   const body: any = {
     expression: `folder:${folder}/*`,
-    max_results: 50,
+    max_results: 100,
     with_field: ["context", "metadata", "tags"], // width/height are included automatically
   };
 

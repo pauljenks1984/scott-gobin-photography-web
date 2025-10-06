@@ -1,3 +1,4 @@
+// src/pages/index.tsx
 import React, { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -60,13 +61,9 @@ export default function Home() {
       const others = data.images.filter(
         (img: CloudinaryImage) => img.metadata?.featured !== "true"
       );
+      const sorted = [...featured, ...others];
 
-      // Avoid duplicates if same image appears again
-      const newImages = [...featured, ...others].filter(
-        (img) => !images.some((existing) => existing.id === img.id)
-      );
-
-      setImages((prev) => [...prev, ...newImages]);
+      setImages((prev) => [...prev, ...sorted]);
       setNextCursor(data.next_cursor || null);
     } catch (err) {
       console.error("❌ Error loading images:", err);
@@ -83,9 +80,9 @@ export default function Home() {
   const slides = images.map((img) => ({ src: img.secure_url }));
 
   // ✅ Masonry breakpoints
-  const breakpointColumns = {
+  const breakpointColumnsObj = {
     default: 3,
-    768: 2, // mobile
+    768: 2,
   };
 
   return (
@@ -97,19 +94,23 @@ export default function Home() {
         {loading && <p className="text-center text-gray-500">Loading gallery...</p>}
 
         <Masonry
-          breakpointCols={breakpointColumns}
+          breakpointCols={breakpointColumnsObj}
           className="flex gap-4"
-          columnClassName="space-y-4"
+          columnClassName="flex flex-col gap-4"
         >
           {images.map((img, index) => (
-            <ProgressiveImage
+            <div
               key={img.id || img.public_id || `${index}-${img.secure_url}`}
-              img={img}
-              onClick={() => {
-                setCurrentIndex(index);
-                setLightboxOpen(true);
-              }}
-            />
+              style={{ breakInside: "avoid" }}
+            >
+              <ProgressiveImage
+                img={img}
+                onClick={() => {
+                  setCurrentIndex(index);
+                  setLightboxOpen(true);
+                }}
+              />
+            </div>
           ))}
         </Masonry>
 
@@ -125,6 +126,7 @@ export default function Home() {
         )}
       </div>
 
+      {/* Lightbox */}
       <Lightbox
         open={lightboxOpen}
         close={() => setLightboxOpen(false)}
