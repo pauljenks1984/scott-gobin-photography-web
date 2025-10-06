@@ -49,7 +49,7 @@ export default function Fashion() {
   const loadImages = async (cursor?: string) => {
     try {
       const res = await fetch(
-        `/api/images?folder=photography/fashion${cursor ? `&cursor=${cursor}` : ""}`
+        `/api/images?folder=photography/fashion-portraits${cursor ? `&cursor=${cursor}` : ""}`
       );
       if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();

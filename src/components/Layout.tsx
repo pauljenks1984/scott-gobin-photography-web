@@ -10,7 +10,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const navItems = [
     { href: "/", label: "Home" },
     { href: "/commercial", label: "Commercial" },
-    { href: "/fashion", label: "Fashion" },
+    { href: "/fashion", label: "Fashion and Portraits" },
     { href: "/property", label: "Property" },
     { href: "/wedding", label: "Wedding" },
     { href: "/about", label: "About" },
