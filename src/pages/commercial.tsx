@@ -94,7 +94,7 @@ export default function Commercial() {
         title="Commercial"
         description="Scott-Gobin Photography — Commercial portfolio"
       />
-      <div className="max-w-8xl mx-auto px-4">
+      <div className="max-w-8xl mx-auto px-4 pt-4">
         <h1 className="visually-hidden text-3xl font-semibold my-8">Commercial</h1>
 
         {loading && <p className="text-center text-gray-500">Loading gallery...</p>}

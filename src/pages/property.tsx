@@ -1,4 +1,4 @@
-// src/pages/index.tsx
+// src/pages/property.tsx
 import React, { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -17,10 +17,11 @@ type CloudinaryImage = {
   metadata?: Record<string, string>;
 };
 
-export default function Home() {
+export default function Property() {
   const [images, setImages] = useState<CloudinaryImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [error, setError] = useState(false);
 
   // Lightbox state
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -48,8 +49,9 @@ export default function Home() {
   const loadImages = async (cursor?: string) => {
     try {
       const res = await fetch(
-        `/api/images?folder=photography${cursor ? `&cursor=${cursor}` : ""}`
+        `/api/images?folder=photography/property${cursor ? `&cursor=${cursor}` : ""}`
       );
+      if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
 
       if (!data || !Array.isArray(data.images)) return;
@@ -67,6 +69,7 @@ export default function Home() {
       setNextCursor(data.next_cursor || null);
     } catch (err) {
       console.error("❌ Error loading images:", err);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -87,32 +90,48 @@ export default function Home() {
 
   return (
     <Layout>
-      <SEOHead title="Home" description="Scott-Gobin Photography — Featured work" />
+      <SEOHead
+        title="Property"
+        description="Scott-Gobin Photography — Property portfolio"
+      />
       <div className="max-w-8xl mx-auto px-4 pt-4">
-        <h1 className="sr-only">Featured Work</h1>
+        <h1 className="visually-hidden text-3xl font-semibold my-8">Property</h1>
 
         {loading && <p className="text-center text-gray-500">Loading gallery...</p>}
 
-        <Masonry
-          breakpointCols={breakpointColumnsObj}
-          className="flex gap-4"
-          columnClassName="flex flex-col gap-4"
-        >
-          {images.map((img, index) => (
-            <div
-              key={img.id || img.public_id || `${index}-${img.secure_url}`}
-              style={{ breakInside: "avoid" }}
-            >
-              <ProgressiveImage
-                img={img}
-                onClick={() => {
-                  setCurrentIndex(index);
-                  setLightboxOpen(true);
-                }}
-              />
-            </div>
-          ))}
-        </Masonry>
+        {error ? (
+          <div className="text-center py-20">
+            <p className="text-gray-600 mb-4">
+              ⚠️ Property gallery is unavailable right now. Please try again later.
+            </p>
+            <img
+              src="/fallback.jpg"
+              alt="Fallback gallery"
+              className="mx-auto max-w-sm opacity-70"
+            />
+          </div>
+        ) : (
+          <Masonry
+            breakpointCols={breakpointColumnsObj}
+            className="flex gap-4"
+            columnClassName="flex flex-col gap-4"
+          >
+            {images.map((img, index) => (
+              <div
+                key={img.id || img.public_id || `${index}-${img.secure_url}`}
+                style={{ breakInside: "avoid" }}
+              >
+                <ProgressiveImage
+                  img={img}
+                  onClick={() => {
+                    setCurrentIndex(index);
+                    setLightboxOpen(true);
+                  }}
+                />
+              </div>
+            ))}
+          </Masonry>
+        )}
 
         {nextCursor && (
           <div className="text-center my-8">
@@ -126,7 +145,6 @@ export default function Home() {
         )}
       </div>
 
-      {/* Lightbox */}
       <Lightbox
         open={lightboxOpen}
         close={() => setLightboxOpen(false)}
