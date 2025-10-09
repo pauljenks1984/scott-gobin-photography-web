@@ -84,25 +84,26 @@ export default function Fashion() {
 
   // ✅ Masonry breakpoints
   const breakpointColumnsObj = {
-    default: 3,
-    768: 2,
+        default: 3,   // desktop (>= 1024px)
+        1024: 2,      // tablet
+        640: 1        // mobile
   };
 
   return (
     <Layout>
       <SEOHead
-        title="Fashion"
-        description="Scott-Gobin Photography — Fashion portfolio"
+        title="Fashion and Portraits"
+        description="Scott-Gobin Photography — Fashion and Portraits portfolio"
       />
       <div className="max-w-8xl mx-auto px-4 pt-4">
-        <h1 className="visually-hidden text-3xl font-semibold my-8">Fashion</h1>
+        <h1 className="visually-hidden text-3xl font-semibold my-8">Fashion and Portraits</h1>
 
         {loading && <p className="text-center text-gray-500">Loading gallery...</p>}
 
         {error ? (
           <div className="text-center py-20">
             <p className="text-gray-600 mb-4">
-              ⚠️ Fashion gallery is unavailable right now. Please try again later.
+              ⚠️ Fashion and Portraits gallery is unavailable right now. Please try again later.
             </p>
             <img
               src="/fallback.jpg"
