@@ -37,7 +37,7 @@ export default function ContactPage() {
   return (
     <Layout>
       <SEOHead title="Contact" description="Get in touch with Scott-Gobin, professional photographer based in Liverpool, Merseyside." />
-      <div className="max-w-8xl mx-auto px-4 pt-4">
+      <div className="max-w-8xl mx-auto px-4 pt-4 pb-12">
         <h1 className="text-3xl font-semibold my-8">Get in touch</h1>
 
         {status === "success" ? (
