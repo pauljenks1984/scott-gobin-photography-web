@@ -13,6 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { href: "/fashion", label: "Fashion and Portraits" },
     { href: "/property", label: "Property" },
     { href: "/about", label: "About" },
+    { href: "/contact", label: "Contact" },
   ];
 
   useEffect(() => {
