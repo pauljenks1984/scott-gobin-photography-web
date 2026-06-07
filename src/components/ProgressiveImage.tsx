@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { cloudinaryUrl } from "@/lib/cloudinary";
 
 type Props = {
   img: {
@@ -32,7 +33,7 @@ export default function ProgressiveImage({ img, onClick }: Props) {
 
       {/* Main image */}
       <img
-        src={img.secure_url}
+        src={cloudinaryUrl(img.secure_url, "f_auto,q_auto,w_800")}
         alt={img.public_id}
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
           loaded ? "opacity-100" : "opacity-0"

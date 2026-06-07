@@ -6,6 +6,7 @@ import Lightbox from "yet-another-react-lightbox";
 import ProgressiveImage from "@/components/ProgressiveImage";
 import Masonry from "react-masonry-css";
 import "yet-another-react-lightbox/styles.css";
+import { cloudinaryUrl } from "@/lib/cloudinary";
 
 type CloudinaryImage = {
   id: string;
@@ -77,7 +78,7 @@ export default function Home() {
     await loadImages(nextCursor);
   };
 
-  const slides = images.map((img) => ({ src: img.secure_url }));
+  const slides = images.map((img) => ({ src: cloudinaryUrl(img.secure_url, "f_auto,q_auto,w_1600") }));
 
   // ✅ Masonry breakpoints
   const breakpointColumnsObj = {

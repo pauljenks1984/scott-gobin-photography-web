@@ -1,3 +1,7 @@
+export function cloudinaryUrl(url: string, transforms: string): string {
+  return url.replace("/upload/", `/upload/${transforms}/`);
+}
+
 export async function fetchImagesByFolder(folder: string, nextCursor?: string) {
   const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
   const API_KEY = process.env.CLOUDINARY_API_KEY;
