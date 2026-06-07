@@ -12,6 +12,13 @@ export default function Document() {
         />
       </Head>
       <body>
+        {/* Hidden form so Netlify detects it at build time */}
+        <form name="contact" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+          <input name="bot-field" />
+          <input name="name" />
+          <input name="email" />
+          <textarea name="message"></textarea>
+        </form>
         <Main />
         <NextScript />
       </body>
