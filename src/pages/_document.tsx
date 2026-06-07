@@ -15,7 +15,7 @@ export default function Document() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "ProfessionalService",
-            "name": "Scott Gobin Photography",
+            "name": "Scott-Gobin Photography",
             "description": "Professional photographer based in Liverpool, UK, specialising in commercial, fashion, portrait and property photography across Merseyside and the North West.",
             "url": "https://scottgobinphotography.com",
             "image": "https://scottgobinphotography.com/scott-gobin-photography.png",

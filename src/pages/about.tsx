@@ -28,7 +28,7 @@ export default function AboutPage({ frontmatter, contentHtml }: Props) {
           <div className="w-full md:w-72 shrink-0">
             <img
               src={cloudinaryUrl(HEADSHOT_URL, "f_auto,q_auto,w_576,c_fill,g_face")}
-              alt="Scott Gobin – photographer"
+              alt="Scott-Gobin – photographer"
               className="w-full rounded"
             />
           </div>

@@ -7,8 +7,8 @@ const DEFAULT_DESC = 'Professional photographer based in Liverpool. Commercial, 
 export default function SEOHead({ title, description, image }: { title?: string; description?: string; image?: string }) {
   const router = useRouter();
   const siteTitle = title
-    ? `${title} | Scott Gobin Photography`
-    : 'Scott Gobin Photography | Liverpool Photographer';
+    ? `${title} | Scott-Gobin Photography`
+    : 'Scott-Gobin Photography | Liverpool Photographer';
   const desc = description || DEFAULT_DESC;
   const canonical = `${SITE_URL}${router.pathname === '/' ? '' : router.pathname}`;
   const ogImage = image || `${SITE_URL}/scott-gobin-photography.png`;
@@ -20,7 +20,7 @@ export default function SEOHead({ title, description, image }: { title?: string;
       <link rel="canonical" href={canonical} />
 
       <meta property="og:type" content="website" />
-      <meta property="og:site_name" content="Scott Gobin Photography" />
+      <meta property="og:site_name" content="Scott-Gobin Photography" />
       <meta property="og:title" content={siteTitle} />
       <meta property="og:description" content={desc} />
       <meta property="og:url" content={canonical} />

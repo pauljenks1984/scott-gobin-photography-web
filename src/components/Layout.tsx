@@ -76,7 +76,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         {/* Copyright — desktop sidebar footer */}
         <div className="hidden md:block mt-auto px-6 py-6 text-xs text-gray-400 leading-snug">
-          <p className="font-medium text-gray-500">Scott Gobin Photography</p>
+          <p className="font-medium text-gray-500">Scott-Gobin Photography</p>
           <p>&copy; {new Date().getFullYear()} All rights reserved</p>
         </div>
       </div>
@@ -86,7 +86,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       {/* Copyright — mobile footer */}
       <footer className="md:hidden border-t px-4 py-4 text-xs text-gray-400 text-center">
-        <p className="font-medium text-gray-500">Scott Gobin Photography</p>
+        <p className="font-medium text-gray-500">Scott-Gobin Photography</p>
         <p>&copy; {new Date().getFullYear()} All rights reserved</p>
       </footer>
     </div>
