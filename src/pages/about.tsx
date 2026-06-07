@@ -22,6 +22,9 @@ export default function AboutPage({ frontmatter, contentHtml }: Props) {
       <div className="max-w-8xl mx-auto px-4 pt-4">
         <h1 className="text-3xl font-semibold my-8">{frontmatter.title}</h1>
         <div className="flex flex-col md:flex-row gap-10 items-start">
+          <article className="prose prose-lg max-w-none flex-1">
+            <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+          </article>
           <div className="w-full md:w-72 shrink-0">
             <img
               src={cloudinaryUrl(HEADSHOT_URL, "f_auto,q_auto,w_576,c_fill,g_face")}
@@ -29,9 +32,6 @@ export default function AboutPage({ frontmatter, contentHtml }: Props) {
               className="w-full rounded"
             />
           </div>
-          <article className="prose prose-lg max-w-none flex-1">
-            <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
-          </article>
         </div>
       </div>
     </Layout>
