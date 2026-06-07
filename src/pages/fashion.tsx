@@ -93,8 +93,8 @@ export default function Fashion() {
   return (
     <Layout>
       <SEOHead
-        title="Fashion and Portraits"
-        description="Scott-Gobin Photography — Fashion and Portraits portfolio"
+        title="Fashion &amp; Portrait Photographer Liverpool"
+        description="Fashion and portrait photographer based in Liverpool, serving clients across Merseyside and the North West."
       />
       <div className="max-w-8xl mx-auto px-4 pt-4">
         <h1 className="visually-hidden text-3xl font-semibold my-8">Fashion and Portraits</h1>

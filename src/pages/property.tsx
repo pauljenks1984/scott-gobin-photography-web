@@ -93,8 +93,8 @@ export default function Property() {
   return (
     <Layout>
       <SEOHead
-        title="Property"
-        description="Scott-Gobin Photography — Property portfolio"
+        title="Property Photographer Liverpool"
+        description="Property photographer based in Liverpool. Professional property photography for estate agents and developers across Merseyside and the North West."
       />
       <div className="max-w-8xl mx-auto px-4 pt-4">
         <h1 className="visually-hidden text-3xl font-semibold my-8">Property</h1>

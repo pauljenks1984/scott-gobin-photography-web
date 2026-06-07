@@ -93,8 +93,8 @@ export default function Commercial() {
   return (
     <Layout>
       <SEOHead
-        title="Commercial"
-        description="Scott-Gobin Photography — Commercial portfolio"
+        title="Commercial Photographer Liverpool"
+        description="Commercial photographer based in Liverpool, working with businesses across Merseyside and the North West to promote products and services."
       />
       <div className="max-w-8xl mx-auto px-4 pt-4">
         <h1 className="visually-hidden text-3xl font-semibold my-8">Commercial</h1>

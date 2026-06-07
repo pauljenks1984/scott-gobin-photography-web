@@ -1,5 +1,6 @@
 ---
 title: About Scott-Gobin Photography
+description: Scott Gobin is a professional photographer based in Liverpool, specialising in commercial, fashion, portrait and property photography across Merseyside and the North West.
 ---
 **I’m a freelance photographer based in Liverpool, UK**
 

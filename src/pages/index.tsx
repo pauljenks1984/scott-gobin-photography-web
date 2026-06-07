@@ -89,7 +89,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <SEOHead title="Home" description="Scott-Gobin Photography — Featured work" />
+      <SEOHead description="Professional photographer based in Liverpool. Commercial, fashion, portrait and property photography across Merseyside and the North West." />
       <div className="max-w-8xl mx-auto px-4 pt-4">
         <h1 className="sr-only">Featured Work</h1>
 
