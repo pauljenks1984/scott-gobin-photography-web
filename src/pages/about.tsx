@@ -29,6 +29,8 @@ export default function AboutPage({ frontmatter, contentHtml }: Props) {
             <img
               src={cloudinaryUrl(HEADSHOT_URL, "f_auto,q_auto,w_576,c_fill,g_face")}
               alt="Scott-Gobin – photographer"
+              width={576}
+              height={576}
               className="w-full rounded"
             />
           </div>
