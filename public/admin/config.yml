@@ -17,6 +17,7 @@ collections:
     slug: "{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
+      - { label: "SEO Description", name: "description", widget: "text", required: false, hint: "Short summary shown in search engine results (150–160 characters recommended)" }
       - { label: "Body", name: "body", widget: "markdown" }
 
   - name: "gallery"
