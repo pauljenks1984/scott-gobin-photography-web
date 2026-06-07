@@ -10,8 +10,6 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
-      </Head>
-      <Head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify({
@@ -38,6 +36,7 @@ export default function Document() {
         />
       </Head>
       <body>
+
         {/* Hidden form so Netlify detects it at build time */}
         <form name="contact" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
           <input name="bot-field" />
