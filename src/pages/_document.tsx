@@ -6,6 +6,12 @@ export default function Document() {
     <Html lang="en">
       <Head>
         {/* ✅ Google Fonts: Playfair Display */}
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <script
+          defer
+          data-domain="scottgobinphotography.com"
+          src="https://plausible.io/js/script.js"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap"
           rel="stylesheet"
