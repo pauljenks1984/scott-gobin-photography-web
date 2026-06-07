@@ -5,6 +5,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# TypeScript build cache
+tsconfig.tsbuildinfo
+
 # Build output
 .next/
 out/
