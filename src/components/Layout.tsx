@@ -33,7 +33,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen md:flex">
       {/* Left sidebar (desktop) / Top header (mobile) */}
-      <div className="md:w-56 md:min-h-screen md:border-r md:flex md:flex-col md:flex-shrink-0">
+      <div className="md:w-56 md:h-screen md:sticky md:top-0 md:border-r md:flex md:flex-col md:flex-shrink-0">
 
         {/* Logo row — also contains mobile burger */}
         <div className="flex items-center justify-between h-16 px-4 border-b md:border-b-0 md:h-auto md:px-6 md:pt-8 md:pb-8">
