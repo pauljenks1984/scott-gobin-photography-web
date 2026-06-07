@@ -16,7 +16,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { href: "/about", label: "About" },
   ];
 
-  // Auto-close the mobile menu when resizing up to desktop
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth >= 768) setMenuOpen(false);
@@ -25,54 +24,48 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  const linkClass = (href: string) =>
+    `transition ${
+      router.pathname === href
+        ? "text-black font-semibold border-b-2 border-black"
+        : "text-gray-600 hover:text-black"
+    }`;
+
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="border-b">
-        <div className="max-w-8xl mx-auto px-4 flex items-center justify-between h-16">
-          {/* Logo */}
+    <div className="min-h-screen md:flex">
+      {/* Left sidebar (desktop) / Top header (mobile) */}
+      <div className="md:w-56 md:min-h-screen md:border-r md:flex md:flex-col md:flex-shrink-0">
+
+        {/* Logo row — also contains mobile burger */}
+        <div className="flex items-center justify-between h-16 px-4 border-b md:border-b-0 md:h-auto md:px-6 md:pt-8 md:pb-8">
           <Link href="/" className="flex items-center space-x-2 font-bold text-lg">
             <img src="/scott-gobin-photography.png" alt="Logo" className="h-8 w-auto" />
             <span className="visually-hidden">Scott–Gobin Photography</span>
           </Link>
-
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex space-x-6">
-            {navItems.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`transition ${
-                  router.pathname === href
-                    ? "text-black font-semibold border-b-2 border-black"
-                    : "text-gray-600 hover:text-black"
-                }`}
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Mobile Burger */}
           <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
 
-        {/* Mobile Menu (stacked, not overlay) */}
+        {/* Desktop vertical nav */}
+        <nav className="hidden md:flex md:flex-col md:px-6 md:space-y-4">
+          {navItems.map(({ href, label }) => (
+            <Link key={href} href={href} className={linkClass(href)}>
+              {label}
+            </Link>
+          ))}
+        </nav>
+
+        {/* Mobile dropdown */}
         {menuOpen && (
           <nav className="md:hidden border-t bg-white">
-            <div className="max-w-8xl mx-auto px-4 py-2 flex flex-col items-start space-y-2">
+            <div className="px-4 py-2 flex flex-col items-start space-y-2">
               {navItems.map(({ href, label }) => (
                 <Link
                   key={href}
                   href={href}
                   onClick={() => setMenuOpen(false)}
-                  className={`transition w-fit inline-flex ${
-                    router.pathname === href
-                      ? "text-black font-semibold border-b-2 border-black"
-                      : "text-gray-600 hover:text-black"
-                  }`}
+                  className={`w-fit inline-flex ${linkClass(href)}`}
                 >
                   {label}
                 </Link>
@@ -80,10 +73,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </nav>
         )}
-      </header>
+      </div>
 
       {/* Main content */}
-      <main className="flex-grow">{children}</main>
+      <main className="flex-1">{children}</main>
     </div>
   );
 }
